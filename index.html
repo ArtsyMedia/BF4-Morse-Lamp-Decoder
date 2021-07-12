@@ -1,6 +1,5 @@
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="styles.css">
   <style>
     @font-face {
       font-family: AgencyFB;
@@ -15,7 +14,7 @@
 
     .post-title {
       font-family: AgencyFB;
-      font-size: 300%;
+      font-size: 40pt;
     }
   </style>
 </head>
@@ -23,7 +22,7 @@
 <body>
   <div id="test"></div>
   <h1 class="post-title">BATTLEFIELD 4 ONLINE MORSE DECODER</h1>
-  <input type="file" accept="video/*" />
+  <input id="input" type="file" accept="video/*" />
   <br></br>
 
   <p id="progress"></p>
@@ -344,7 +343,7 @@
                     _d.label = 3;
                   case 3:
                     time += duration / totalFrames;
-                    document.getElementById('progress').innerHTML = "Processing frames: " + (Math.round((time / duration) * 100) - 1) + "%";
+                    document.getElementById('progress').innerHTML = "Processing frames: " + (Math.round((time / duration) * 100) - 0) + "%";
                     return [3 /*break*/ , 1];
                   case 4:
                     resolve(frames);
