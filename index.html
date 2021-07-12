@@ -1,0 +1,378 @@
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    @font-face {
+      font-family: AgencyFB;
+      src: url('AgencyFBBold.woff') format('woff');
+    }
+
+    html,
+    body {
+      text-align: center;
+      place-items: center;
+    }
+
+    .post-title {
+      font-family: AgencyFB;
+      font-size: 300%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test"></div>
+  <h1 class="post-title">BATTLEFIELD 4 ONLINE MORSE DECODER</h1>
+  <input type="file" accept="video/*" />
+  <br></br>
+
+  <p id="progress"></p>
+
+  <div id="morse"></div>
+  <p id="output"></p>
+
+  <script>
+    const history = [];
+    onOffLog = []
+    var stateLengthLog = [{
+      "state": false,
+      "frameNum": 0
+    }];
+    let wasOn = false;
+
+    var morseString = "";
+    var alphabet = {
+      "-----": "0",
+      ".----": "1",
+      "..---": "2",
+      "...--": "3",
+      "....-": "4",
+      ".....": "5",
+      "-....": "6",
+      "--...": "7",
+      "---..": "8",
+      "----.": "9",
+      ".-": "a",
+      "-...": "b",
+      "-.-.": "c",
+      "-..": "d",
+      ".": "e",
+      "..-.": "f",
+      "--.": "g",
+      "....": "h",
+      "..": "i",
+      ".---": "j",
+      "-.-": "k",
+      ".-..": "l",
+      "--": "m",
+      "-.": "n",
+      "---": "o",
+      ".--.": "p",
+      "--.-": "q",
+      ".-.": "r",
+      "...": "s",
+      "-": "t",
+      "..-": "u",
+      "...-": "v",
+      ".--": "w",
+      "-..-": "x",
+      "-.--": "y",
+      "--..": "z",
+      "-.-.--": "!",
+      ".-.-.-": ".",
+      "--..--": ",",
+      "---...": ":"
+    };
+
+    document.querySelector('input').addEventListener('change', startDecode, false);
+
+    function startDecode() {
+      var video = document.createElement('video');
+      var frameArray = [];
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      var pro = document.querySelector('#progress');
+
+      function initCanvas() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        VideoToFrames.getFrames(video.src, 30, VideoToFramesMethod.fps).then(function(frames) {
+          frames.forEach(function(frame) {
+            var colorSum = 0;
+            var framecanvas = document.createElement('canvas');
+            framecanvas.width = frame.width;
+            framecanvas.height = frame.height;
+            var ctx = framecanvas.getContext('2d');
+            ctx.putImageData(frame, 0, 0);
+            document.getElementsByTagName('body')[0].appendChild(framecanvas);
+
+            var imageData = ctx.getImageData(0, 0, framecanvas.width, framecanvas.height);
+            var data = imageData.data;
+            var r, g, b, avg;
+
+            for (var x = 0, len = data.length; x < len; x += 4) {
+              r = data[x];
+              g = data[x + 1];
+              b = data[x + 2];
+
+              avg = (r + g + b) / 3;
+              colorSum += avg;
+            }
+
+            var brightness = Math.floor(colorSum / (frame.width * frame.height));
+
+            const isOn = brightness > 100;
+            onOffLog.push(isOn);
+
+            if (stateLengthLog[(stateLengthLog.length) - 1].state == isOn) {
+              stateLengthLog[(stateLengthLog.length) - 1].frameNum = stateLengthLog[(stateLengthLog.length) - 1].frameNum + 1;
+            } else {
+              stateLengthLog.push({
+                "state": isOn,
+                "frameNum": 1
+              })
+            }
+
+            morseString = "";
+            stateLengthLog.forEach(convertMorse);
+            document.getElementById('morse').innerHTML = morseString;
+          });
+        });
+      }
+
+      video.muted = true;
+      video.playbackRate = 1;
+
+      video.addEventListener('loadedmetadata', initCanvas, false);
+
+      video.src = URL.createObjectURL(this.files[0]);
+    }
+
+    function convertMorse(interval) {
+      if (interval.state == true) {
+        if (interval.frameNum <= 6) {
+          morseString = morseString.concat(".");
+        } else {
+          morseString = morseString.concat("-");
+        }
+      } else {
+        if (interval.frameNum <= 7) {
+          morseString = morseString.concat("");
+        } else if (interval.frameNum > 16) {
+          morseString = morseString.concat("   ");
+        } else {
+          morseString = morseString.concat(" ");
+        }
+      }
+      decodeMorse(morseString);
+    }
+
+    function decodeMorse(message) {
+      var messageConverted = [];
+
+      message.split("   ").map(function(word) {
+        word.split(" ").map(function(letter) {
+          messageConverted.push(alphabet[letter]);
+        });
+        messageConverted.push(" ");
+      });
+
+      document.getElementById("output").innerHTML = messageConverted.join("");
+    }
+
+
+
+
+
+
+
+
+
+    var __awaiter = (this && this.__awaiter) || function(thisArg, _arguments, P, generator) {
+      return new(P || (P = Promise))(function(resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+
+        function step(result) {
+          result.done ? resolve(result.value) : new P(function(resolve) {
+            resolve(result.value);
+          }).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments)).next());
+      });
+    };
+    var __generator = (this && this.__generator) || function(thisArg, body) {
+      var _ = {
+          label: 0,
+          sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+          },
+          trys: [],
+          ops: []
+        },
+        f, y, t;
+      return {
+        next: verb(0),
+        "throw": verb(1),
+        "return": verb(2)
+      };
+
+      function verb(n) {
+        return function(v) {
+          return step([n, v]);
+        };
+      }
+
+      function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+          if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+          if (y = 0, t) op = [0, t.value];
+          switch (op[0]) {
+            case 0:
+            case 1:
+              t = op;
+              break;
+            case 4:
+              _.label++;
+              return {
+                value: op[1], done: false
+              };
+            case 5:
+              _.label++;
+              y = op[1];
+              op = [0];
+              continue;
+            case 7:
+              op = _.ops.pop();
+              _.trys.pop();
+              continue;
+            default:
+              if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                _ = 0;
+                continue;
+              }
+              if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
+                _.label = op[1];
+                break;
+              }
+              if (op[0] === 6 && _.label < t[1]) {
+                _.label = t[1];
+                t = op;
+                break;
+              }
+              if (t && _.label < t[2]) {
+                _.label = t[2];
+                _.ops.push(op);
+                break;
+              }
+              if (t[2]) _.ops.pop();
+              _.trys.pop();
+              continue;
+          }
+          op = body.call(thisArg, _);
+        } catch (e) {
+          op = [6, e];
+          y = 0;
+        } finally {
+          f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+          value: op[0] ? op[1] : void 0,
+          done: true
+        };
+      }
+    };
+    var VideoToFramesMethod;
+    (function(VideoToFramesMethod) {
+      VideoToFramesMethod[VideoToFramesMethod["fps"] = 0] = "fps";
+      VideoToFramesMethod[VideoToFramesMethod["totalFrames"] = 1] = "totalFrames";
+    })(VideoToFramesMethod || (VideoToFramesMethod = {}));
+    var VideoToFrames = (function() {
+      function VideoToFrames() {}
+      VideoToFrames.getFrames = function(videoUrl, amount, type) {
+        var _this = this;
+        if (type === void 0) {
+          type = VideoToFramesMethod.fps;
+        }
+        return new Promise(function(resolve, reject) {
+          var frames = [];
+          var canvas = document.createElement('canvas');
+          var context = canvas.getContext('2d');
+          var duration;
+          var video = document.createElement('video');
+          video.preload = 'auto';
+          var that = _this;
+          video.addEventListener('loadeddata', function() {
+            return __awaiter(this, void 0, void 0, function() {
+              var totalFrames, time, _a, _b, _c;
+              return __generator(this, function(_d) {
+                switch (_d.label) {
+                  case 0:
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    duration = video.duration;
+                    totalFrames = amount;
+                    if (type === VideoToFramesMethod.fps) {
+                      totalFrames = duration * amount;
+                    }
+                    time = 0;
+                    _d.label = 1;
+                  case 1:
+                    if (!(time < duration))
+                      return [3 /*break*/ , 4];
+                    _b = (_a = frames).push;
+                    return [4 /*yield*/ , that.getVideoFrame(video, context, time)];
+                  case 2:
+                    _b.apply(_a, [_d.sent()]);
+                    _d.label = 3;
+                  case 3:
+                    time += duration / totalFrames;
+                    document.getElementById('progress').innerHTML = "Processing frames: " + (Math.round((time / duration) * 100) - 1) + "%";
+                    return [3 /*break*/ , 1];
+                  case 4:
+                    resolve(frames);
+                    return [2 /*return*/ ];
+                }
+              });
+            });
+          });
+          video.src = videoUrl;
+          video.load();
+        });
+      };
+      VideoToFrames.getVideoFrame = function(video, context, time) {
+        var _this = this;
+        return new Promise(function(resolve, reject) {
+          var eventCallback = function() {
+            video.removeEventListener('seeked', eventCallback);
+            _this.storeFrame(video, context, resolve);
+          };
+          video.addEventListener('seeked', eventCallback);
+          video.currentTime = time;
+        });
+      };
+      VideoToFrames.storeFrame = function(video, context, resolve) {
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        resolve(context.getImageData(0, 0, video.videoWidth, video.videoHeight));
+      };
+      return VideoToFrames;
+    }());
+  </script>
+</body>
