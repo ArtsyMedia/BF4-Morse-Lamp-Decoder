@@ -1,0 +1,127 @@
+@font-face {
+  font-family: AgencyFB;
+  src: url('AgencyFBBold.woff') format('woff');
+}
+
+html, body {
+  text-align: center;
+  place-items: center;
+  margin: 0;
+  font-family: Roboto;
+  font-size: 20px;
+  line-height: 30px;
+  color: rgb(217, 217, 217);
+  background-color: rgb(30, 31, 32);
+  text-align: center;
+  place-items: center;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 50rem;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: rgb(217, 217, 217);
+}
+
+h1 {
+  font-size: 2rem;
+  font-family: AgencyFB;
+}
+
+h2 {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+}
+
+h3 {
+  margin-top: 1.5rem;
+  font-size: 1.25rem;
+}
+
+h4, h5, h6 {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+hr {
+  position: relative;
+  margin: 24px 0;
+  border: 0;
+  border-top: 1px solid rgb(255, 255, 255, 0.15);
+}
+
+ul, ol, dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  margin-left: 100px;
+}
+
+li + li {
+  margin-top: .25rem;
+}
+
+a {
+  color: rgb(217, 217, 217);
+}
+
+nav {
+  float: right;
+  line-height: 1.25rem;
+  word-spacing: 1rem;
+  opacity: 0.5;
+}
+
+.navword {
+  display: inline;
+  font-weight: normal;
+  text-decoration: none;
+  font-family: Roboto;
+}
+
+.masthead {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 48px;
+}
+
+.titlehead {
+  text-decoration: none;
+}
+
+#searchbar {
+  font-size: 16px;
+  color: rgb(217, 217, 217);
+  padding: 12px 20px 12px 40px;
+  border: none;
+  margin-bottom: 12px;
+  width: 672px;
+  background-color: rgb(33, 37, 41);
+}
+
+.searchdiv {
+  align: center;
+}
+
+.searchdiv span {
+  position: absolute;
+  z-index: 2;
+  width: 2.775rem;
+  height: 2.375rem;
+  line-height: 2.99rem;
+  text-align: center;
+  pointer-events: none;
+  color: rgb(153, 153, 153);
+}
