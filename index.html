@@ -122,7 +122,6 @@
             framecanvas.height = frame.height;
             var ctx = framecanvas.getContext('2d');
             ctx.putImageData(frame, 0, 0);
-            document.getElementsByTagName('body')[0].appendChild(framecanvas);
 
             var imageData = ctx.getImageData(0, 0, framecanvas.width, framecanvas.height);
             var data = imageData.data;
